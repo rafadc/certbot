@@ -887,7 +887,7 @@ def prepare_and_parse_args(plugins, args, detect_defaults=False):  # pylint: dis
              " in order to obtain test certificates, and reloads webservers to deploy and then"
              " roll back those changes.  It also calls --pre-hook and --post-hook commands"
              " if they are defined because they may be necessary to accurately simulate"
-             " renewal. --renew-hook commands are not called.")
+             " renewal. --deploy-hook commands are not called.")
     helpful.add(
         ["register", "automation"], "--register-unsafely-without-email", action="store_true",
         help="Specifying this flag enables registering an account with no "
@@ -1086,8 +1086,10 @@ def prepare_and_parse_args(plugins, args, detect_defaults=False):  # pylint: dis
         " multiple renewed certificates have identical post-hooks, only"
         " one will be run.")
     helpful.add(
-        "renew", "--renew-hook",
-        help="Command to be run in a shell once for each successfully renewed"
+        "renew", "--renew-hook", help=argparse.SUPPRESS)
+    helpful.add(
+        ["renew", "certonly", "run"], "--deploy-hook", dest="renew_hook",
+        help="Command to be run in a shell once for each successfully issued"
         " certificate. For this command, the shell variable $RENEWED_LINEAGE"
         " will point to the config live subdirectory (for example,"
         " \"/etc/letsencrypt/live/example.com\") containing the new certificates"
@@ -1098,7 +1100,7 @@ def prepare_and_parse_args(plugins, args, detect_defaults=False):  # pylint: dis
         "renew", "--disable-hook-validation",
         action='store_false', dest='validate_hooks', default=True,
         help="Ordinarily the commands specified for"
-        " --pre-hook/--post-hook/--renew-hook will be checked for validity, to"
+        " --pre-hook/--post-hook/--deploy-hook will be checked for validity, to"
         " see if the programs being run are in the $PATH, so that mistakes can"
         " be caught early, even when the hooks aren't being run just yet. The"
         " validation is rather simplistic and fails if you use more advanced"

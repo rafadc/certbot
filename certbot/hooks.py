@@ -101,7 +101,7 @@ def renew_hook(config, domains, lineage_path):
         if not config.dry_run:
             os.environ["RENEWED_DOMAINS"] = " ".join(domains)
             os.environ["RENEWED_LINEAGE"] = lineage_path
-            logger.info("Running renew-hook command: %s", config.renew_hook)
+            logger.info("Running deploy-hook command: %s", config.renew_hook)
             _run_hook(config.renew_hook)
         else:
             logger.warning("Dry run: skipping renewal hook command: %s", config.renew_hook)
